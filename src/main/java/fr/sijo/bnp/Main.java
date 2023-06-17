@@ -13,52 +13,35 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Position maxPosition = new Position();
+
+        Position maxPosition;
         List<Rover> roverList = new ArrayList<>();
         List<String> instructions = new ArrayList<>();
+        String inputFile = "";
+        //final String INPUT = "input.txt";
 
-        //checkIf one param
-        String parameter = "";
         if (args == null || args.length == 0) {
             throw new RuntimeException("Aucun parameter specifié");
         } else if (args.length > 1) {
             throw new RuntimeException("More than one param specified");
         } else {
-            parameter = args[0];
+            inputFile = args[0];
         }
-        //Suite
 
-        // Extension and name file -> input.txt
-        //checkIfFileIsGood();
-        checkFileAndExtension(parameter);
+        checkFileNameAndExtension(inputFile);
 
-        try (BufferedReader br = new BufferedReader(new FileReader(parameter))) {
-            //List<String> list = br.lines().collect(Collectors.toList());
-            String [] list = br.lines().toArray(String[]::new);
-            checkModulo(list.length);
-            String firstLine = list[0];
-            String[] arrayMaxPosition = firstLine.split(" ");
-            if (arrayMaxPosition.length == 2) {
-                int firstNumber = Integer.parseInt(arrayMaxPosition[0]);  // Parse the first number
-                int secondNumber = Integer.parseInt(arrayMaxPosition[1]);  // Parse the second number
-                // Print the extracted numbers
-                System.out.println("First number: " + firstNumber);
-                System.out.println("Second number: " + secondNumber);
-                maxPosition.setX(firstNumber);
-                maxPosition.setY(secondNumber);
-            } else {
-                //System.out.println("Invalid input format");
-                throw new RuntimeException("Invalid input format");
-            }
+        try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
+            String [] lines = br.lines().toArray(String[]::new);
+            checkNumberLines(lines.length);
+            maxPosition = extractMaxPosition(lines[0]);
 
-            for (int i = 1; i < list.length; i++) {
+            for (int i = 1; i < lines.length; i++) {
+                String nextLine = lines[i];
                 if (i % 2 != 0) {
-                    String val = list[i];
-                    Rover rover = createRover(val);
+                    Rover rover = createRover(nextLine);
                     roverList.add(rover);
                 } else {
-                    String val = list[i];
-                    String instruct = createOrCheckInstructiosn(val);
+                    String instruct = createInstruction(nextLine);
                     instructions.add(instruct);
                 }
             }
@@ -67,17 +50,17 @@ public class Main {
                 Rover rover = roverList.get(i);
                 String instruction = instructions.get(i);
                 for (char c : instruction.toCharArray()) {
-                    if (c == RotateAndMove.CHAR_L.getValue()) {
+                    if (RotateAndMove.CHAR_L.getValue() == c) {
                         rover.rotateLeft();
-                    } else if (c == RotateAndMove.CHAR_R.getValue()) {
+                    } else if (RotateAndMove.CHAR_R.getValue() == c) {
                         rover.rotateRight();
-                    } else if (c == RotateAndMove.CHAR_M.getValue()) {
+                    } else if (RotateAndMove.CHAR_M.getValue() == c) {
                         rover.moveForward();
                         if (!isValidPosition(maxPosition, rover.getPosition())) {
-                            throw new RuntimeException("Invalid position after move rover");
+                            throw new RuntimeException("Invalid position,the new position of rover is outside the plateau");
                         }
                     } else {
-                        throw new RuntimeException("Invalid char ");
+                        throw new RuntimeException("Invalid instruction, the instruction will be a part of this list(L, R, M)");
                     }
                 }
                 System.out.println(rover);
@@ -89,55 +72,46 @@ public class Main {
 
     }
 
-    private static void checkFileAndExtension(String input) {
-        if (input != null && input.length() > 2) {
-            String[] result = input.split("\\.");
-            if(!"input".equals(result[0]) || !"txt".equals(result[1])){
-                throw new RuntimeException("Bad input file");
-            }
+    private static void checkFileNameAndExtension(String inputFile) {
+        if (!"input.txt".equals(inputFile)) {
+                throw new RuntimeException("Bad file name or extension, the input file will be input.txt");
         }
     }
 
-    private static void checkFileAndExtension2(String input) {
-        if (!"input.txt".equals(input)) {
-                throw new RuntimeException("Bad input file");
+    private static void checkNumberLines(int numberLine) {
+        if ((numberLine-1) % 2 != 0) {
+            throw new RuntimeException("Incorrect number of line in the input file");
         }
     }
 
-    private static void checkModulo(int input) {
-        if ((input-1) % 2 != 0) {
-            throw new RuntimeException("Incorrect row of line");
-        }
-    }
-
-    private static Rover createRover(String input) {
-        String[] arrayPosiRover = input.split(" ");
-        if (arrayPosiRover.length == 3) {
-            int posiX = Integer.parseInt(arrayPosiRover[0]);  // Parse the first posi
-            int posiY = Integer.parseInt(arrayPosiRover[1]);  // Parse the second posi// Parse the second posi
-            String orientation = arrayPosiRover[2];
-           Rover rover = new Rover();
-           Position position = new Position(posiX, posiY);
-           rover.setPosition(position);
+    private static Rover createRover(String line) {
+        String[] coordinatesAndOrientation = line.split(" ");
+        if (coordinatesAndOrientation.length == 3) {
+            //Maybe error during parsing
+            int positionX = Integer.parseInt(coordinatesAndOrientation[0]);
+            int positionY = Integer.parseInt(coordinatesAndOrientation[1]);
+            Rover rover = new Rover();
+            Position position = new Position(positionX, positionY);
+            rover.setPosition(position);
+            String orientation = coordinatesAndOrientation[2];
            Orientation guidance = getOrientationValue(orientation);
-           if(guidance == null){
-               throw new RuntimeException("Invalid Orientation");
-           }
+            if (guidance == null) {
+                throw new RuntimeException("Invalid orientation");
+            }
            rover.setOrientation(guidance);
            return rover;
         } else {
-            //System.out.println("Invalid input format");
-            throw new RuntimeException("Invalid input format");
+            throw new RuntimeException("Invalid entries for this line to extract position and orientation ");
         }
     }
 
-    private static String createOrCheckInstructiosn(String val) {
-        return val.trim();
+    private static String createInstruction(String line) {
+        return line.trim();
     }
 
-    private static Orientation getOrientationValue(String val) {
+    private static Orientation getOrientationValue(String value) {
         for (Orientation orientation : Orientation.values()) {
-            if (orientation.toString().equalsIgnoreCase(val)) {
+            if (orientation.toString().equals(value)) {
                 return orientation;
             }
         }
@@ -146,6 +120,21 @@ public class Main {
 
     public static boolean isValidPosition(Position posoMax, Position poso) {
         return poso.getX() >= 0 && poso.getX() <= posoMax.getX() && poso.getY() >= 0 && poso.getY() <= posoMax.getY();
+    }
+
+    public static Position extractMaxPosition(String firstLine) {
+        Position result = new Position();
+        String[] listCoordinates = firstLine.split(" ");
+        if (listCoordinates.length == 2) {
+            //Error during parsing handle it
+            int x = Integer.parseInt(listCoordinates[0]);
+            int y = Integer.parseInt(listCoordinates[1]);
+            result.setX(x);
+            result.setY(y);
+        } else {
+            throw new RuntimeException("We have more than two coordinates on the line");
+        }
+        return result;
     }
 
 }

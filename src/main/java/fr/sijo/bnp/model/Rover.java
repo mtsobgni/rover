@@ -16,8 +16,6 @@ public class Rover {
     private Orientation orientation;
 
     public void rotateLeft() {
-        // Rotate the rover 90 degrees to the left
-        // Update the heading accordingly
         if (orientation == Orientation.N) {
             orientation = Orientation.W;
         } else if (orientation == Orientation.W) {
@@ -30,8 +28,6 @@ public class Rover {
     }
 
     public void rotateRight() {
-        // Rotate the rover 90 degrees to the right
-        // Update the heading accordingly
         if (orientation == Orientation.N) {
             orientation = Orientation.E;
         } else if (orientation == Orientation.W) {
@@ -44,8 +40,6 @@ public class Rover {
     }
 
     public void moveForward() {
-        // Move the rover forward one grid point based on its current heading
-        // Update the position (x, y) accordingly
         if (orientation == Orientation.N) {
             position.incrementY();
         } else if (orientation == Orientation.E) {
