@@ -51,6 +51,27 @@ public class Rover {
         }
     }
 
+    public void executeCommand(String instructions, Position maxPosition) {
+        for (char c : instructions.toCharArray()) {
+            if (RotateAndMove.CHAR_L.getValue() == c) {
+                rotateLeft();
+            } else if (RotateAndMove.CHAR_R.getValue() == c) {
+                rotateRight();
+            } else if (RotateAndMove.CHAR_M.getValue() == c) {
+                moveForward();
+                if (!isValidPosition(maxPosition, getPosition())) {
+                    throw new RuntimeException("Invalid position,the new position of rover is outside the plateau");
+                }
+            } else {
+                throw new RuntimeException("Invalid instruction, the instruction will be a part of this list(L, R, M)");
+            }
+        }
+    }
+
+    private boolean isValidPosition(Position posoMax, Position poso) {
+        return poso.getX() >= 0 && poso.getX() <= posoMax.getX() && poso.getY() >= 0 && poso.getY() <= posoMax.getY();
+    }
+
     @Override
     public String toString() {
         return position.getX() +" "+ position.getY() + " "+ orientation;
