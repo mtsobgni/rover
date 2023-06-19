@@ -10,24 +10,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class RoverMain {
+
+    private static final Logger logger = Logger.getLogger(RoverMain.class.getName());
     public static void main(String[] args) throws FileNotFoundException {
+
+        checkInputFileArgument(args);
+        String inputFile = args[0];
+        checkFileNameAndExtension(inputFile);
 
         Position maxPosition;
         List<Rover> roverList = new ArrayList<>();
         List<String> instructions = new ArrayList<>();
-        String inputFile = "";
-
-        if (args.length == 0) {
-            throw new RuntimeException("Please provide the input file as argument.");
-        } else if (args.length > 1) {
-            throw new RuntimeException("More than one param specified");
-        } else {
-            inputFile = args[0];
-        }
-
-        checkFileNameAndExtension(inputFile);
 
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
             String[] lines = br.lines().toArray(String[]::new);
@@ -53,11 +49,19 @@ public class RoverMain {
             }
 
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("Could not find file" +inputFile);
+            throw new FileNotFoundException("Could not find file" + inputFile);
         } catch (IOException exp) {
-            throw new FileNotFoundException("Error reading file" +inputFile);
+            throw new FileNotFoundException("Error reading file" + inputFile);
         }
 
+    }
+
+    private static void checkInputFileArgument(String[] args) {
+        if (args.length == 0) {
+            throw new RuntimeException("Please provide the input file as argument.");
+        } else if (args.length > 1) {
+            logger.info("More than two argument provide we are going to use just the first arg");
+        }
     }
 
     private static void checkFileNameAndExtension(String inputFile) {
@@ -125,8 +129,7 @@ public class RoverMain {
             return result;
         } else if (listCoordinates.length < 2) {
             throw new RuntimeException("We have less than two coordinates on the first line");
-        }
-        else {
+        } else {
             throw new RuntimeException("We have more than two coordinates on the first line");
         }
     }

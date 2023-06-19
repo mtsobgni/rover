@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class RoverTest {
 
     @org.junit.jupiter.api.Test
-    public void shoulCorretlyExecuteCommandOfRover() {
+    public void shouldCorrectlyExecuteCommandOfRoverWithPosition_1_2() {
         //Given
         Position maxPosition = new Position(5, 5);
         Position position = new Position(1, 2);
@@ -23,6 +23,20 @@ public class RoverTest {
         assertEquals(rover.getPosition().getX(), 1);
         assertEquals(rover.getPosition().getY(), 3);
         assertEquals(rover.getOrientation(), Orientation.N);
+    }
+
+    @org.junit.jupiter.api.Test
+    public void shouldCorrectlyRotateLeft() {
+        //Given
+
+        Position position = new Position(1, 2);
+        Rover rover = new Rover(position, Orientation.N);
+
+        //WHEN
+        rover.rotateLeft();
+
+        //THEN
+        assertEquals(rover.getOrientation(), Orientation.W);
     }
 
 }
