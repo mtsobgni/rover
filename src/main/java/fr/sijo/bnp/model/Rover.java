@@ -53,11 +53,11 @@ public class Rover {
 
     public void executeCommand(String instructions, Position maxPosition) {
         for (char c : instructions.toCharArray()) {
-            if (RotateAndMove.CHAR_L.getValue() == c) {
+            if (ActionToDo.LEFT.getValue() == c) {
                 rotateLeft();
-            } else if (RotateAndMove.CHAR_R.getValue() == c) {
+            } else if (ActionToDo.RIGHT.getValue() == c) {
                 rotateRight();
-            } else if (RotateAndMove.CHAR_M.getValue() == c) {
+            } else if (ActionToDo.MOVE.getValue() == c) {
                 moveForward();
                 if (!isValidPosition(maxPosition, getPosition())) {
                     throw new RuntimeException("Invalid position,the new position of rover is outside the plateau");

@@ -1,13 +1,13 @@
 package fr.sijo.bnp.model;
 
-public enum RotateAndMove {
-    CHAR_L('L'),
-    CHAR_R('R'),
-    CHAR_M('M');
+public enum ActionToDo {
+    LEFT('L'),
+    RIGHT('R'),
+    MOVE('M');
 
     private char value;
 
-    RotateAndMove(char value) {
+    ActionToDo(char value) {
         this.value = value;
     }
 

@@ -28,7 +28,8 @@ public class RoverMain {
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
             String[] lines = br.lines().toArray(String[]::new);
             checkNumberLines(lines.length);
-            maxPosition = extractMaxPosition(lines[0]);
+            String line1 = lines[0];
+            maxPosition = extractMaxPosition(line1);
 
             for (int i = 1; i < lines.length; i++) {
                 String nextLine = lines[i];
