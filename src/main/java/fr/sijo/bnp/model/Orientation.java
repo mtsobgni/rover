@@ -1,7 +1,5 @@
 package fr.sijo.bnp.model;
 
-import java.util.Arrays;
-
 public enum Orientation {
     N("NORTH"),
     E("EAST"),
@@ -18,11 +16,34 @@ public enum Orientation {
         return label;
     }
 
-    public Orientation getOrientationValue(String label) {
-        return Arrays.stream(values())
-                .filter(orientation -> orientation.getLabel().equals(label))
-                .findFirst()
-                .orElse(null);
+    public Orientation turnRight() {
+        switch (this) {
+            case N:
+                return E;
+            case S:
+                return W;
+            case E:
+                return S;
+            case W:
+                return N;
+            default:
+                throw new IllegalStateException("Unknown direction");
+        }
+    }
+
+    public Orientation turnLeft() {
+        switch (this) {
+            case N:
+                return W;
+            case S:
+                return E;
+            case E:
+                return N;
+            case W:
+                return S;
+            default:
+                throw new IllegalStateException("Unknown direction");
+        }
     }
 
 }

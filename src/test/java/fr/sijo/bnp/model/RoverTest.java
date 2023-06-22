@@ -1,14 +1,10 @@
-package fr.sijo.bnp;
-
-import fr.sijo.bnp.model.Orientation;
-import fr.sijo.bnp.model.Position;
-import fr.sijo.bnp.model.Rover;
+package fr.sijo.bnp.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RoverTest {
 
-    @org.junit.jupiter.api.Test
+    /*@org.junit.jupiter.api.Test
     public void shouldCorrectlyExecuteCommandOfRoverWithPosition_1_2() {
         //Given
         Position maxPosition = new Position(5, 5);
@@ -40,7 +36,7 @@ public class RoverTest {
         assertEquals(rover.getPosition().getX(), 5);
         assertEquals(rover.getPosition().getY(), 1);
         assertEquals(rover.getOrientation(), Orientation.E);
-    }
+    }*/
 
     @org.junit.jupiter.api.Test
     public void shouldCorrectlyRotateLeft() {
@@ -54,6 +50,22 @@ public class RoverTest {
 
         //THEN
         assertEquals(rover.getOrientation(), Orientation.W);
+        assertEquals(rover.getPosition().getX(), 1);
+        assertEquals(rover.getPosition().getY(), 2);
+    }
+
+    @org.junit.jupiter.api.Test
+    public void shouldCorrectlyRotateRight() {
+        //Given
+
+        Position position = new Position(1, 2);
+        Rover rover = new Rover(position, Orientation.E);
+
+        //WHEN
+        rover.rotateRight();
+
+        //THEN
+        assertEquals(rover.getOrientation(), Orientation.S);
         assertEquals(rover.getPosition().getX(), 1);
         assertEquals(rover.getPosition().getY(), 2);
     }

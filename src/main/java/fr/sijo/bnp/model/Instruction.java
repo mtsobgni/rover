@@ -1,13 +1,13 @@
 package fr.sijo.bnp.model;
 
-public enum ActionToDo {
+public enum Instruction {
     LEFT('L'),
     RIGHT('R'),
     MOVE('M');
 
     private char value;
 
-    ActionToDo(char value) {
+    Instruction(char value) {
         this.value = value;
     }
 

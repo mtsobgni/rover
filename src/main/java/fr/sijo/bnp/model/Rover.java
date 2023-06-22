@@ -16,60 +16,28 @@ public class Rover {
     private Orientation orientation;
 
     public void rotateLeft() {
-        if (orientation == Orientation.N) {
-            orientation = Orientation.W;
-        } else if (orientation == Orientation.W) {
-            orientation = Orientation.S;
-        } else if (orientation == Orientation.S) {
-            orientation = Orientation.E;
-        } else if (orientation == Orientation.E) {
-            orientation = Orientation.N;
-        }
+        orientation = orientation.turnLeft();
     }
 
     public void rotateRight() {
-        if (orientation == Orientation.N) {
-            orientation = Orientation.E;
-        } else if (orientation == Orientation.W) {
-            orientation = Orientation.N;
-        } else if (orientation == Orientation.S) {
-            orientation = Orientation.W;
-        } else if (orientation == Orientation.E) {
-            orientation = Orientation.S;
-        }
+        orientation = orientation.turnRight();
     }
 
     public void moveForward() {
-        if (orientation == Orientation.N) {
-            position.incrementY();
-        } else if (orientation == Orientation.E) {
-            position.incrementX();
-        } else if (orientation == Orientation.S) {
-            position.decrementY();
-        } else if (orientation == Orientation.W) {
-            position.decrementX();
+        switch (this.orientation) {
+            case N:
+                position.incrementY();
+                break;
+            case S:
+                position.decrementY();
+                break;
+            case E:
+                position.incrementX();
+                break;
+            case W:
+                position.decrementX();
+                break;
         }
-    }
-
-    public void executeCommand(String instructions, Position maxPosition) {
-        for (char c : instructions.toCharArray()) {
-            if (ActionToDo.LEFT.getValue() == c) {
-                rotateLeft();
-            } else if (ActionToDo.RIGHT.getValue() == c) {
-                rotateRight();
-            } else if (ActionToDo.MOVE.getValue() == c) {
-                moveForward();
-                if (!isValidPosition(maxPosition, getPosition())) {
-                    throw new RuntimeException("Invalid position,the new position of rover is outside the plateau");
-                }
-            } else {
-                throw new RuntimeException("Invalid instruction, the instruction will be a part of this list(L, R, M)");
-            }
-        }
-    }
-
-    private boolean isValidPosition(Position posoMax, Position poso) {
-        return poso.getX() >= 0 && poso.getX() <= posoMax.getX() && poso.getY() >= 0 && poso.getY() <= posoMax.getY();
     }
 
     @Override
