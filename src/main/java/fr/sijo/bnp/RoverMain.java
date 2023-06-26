@@ -1,11 +1,8 @@
 package fr.sijo.bnp;
 
-import fr.sijo.bnp.model.Plateau;
-import fr.sijo.bnp.model.Position;
-import fr.sijo.bnp.model.Rover;
 import fr.sijo.bnp.model.RoverWithInstructions;
-import fr.sijo.bnp.service.input.FileInputService;
 import fr.sijo.bnp.service.MarsRoverService;
+import fr.sijo.bnp.service.input.FileInputService;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -35,9 +32,12 @@ public class RoverMain {
             throw new RuntimeException(exp);
         }
 
-        for (RoverWithInstructions rover : roverWithInstructions) {
-            marsRoverService.executeCommand(rover.getPlateau(), rover.getRover(), rover.getInstruction());
-            System.out.println(rover.getRover());
+        for (RoverWithInstructions roverAndInsTructions : roverWithInstructions) {
+            marsRoverService.executeCommand(roverAndInsTructions.getRover(), roverAndInsTructions.getInstruction());
+            if (!roverAndInsTructions.getPlateau().isValidPosition(roverAndInsTructions.getRover().getPosition())) {
+                throw new RuntimeException("Invalid position,the new position of rover is outside the plateau");
+            }
+            System.out.println(roverAndInsTructions.getRover());
         }
 
     }
